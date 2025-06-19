@@ -83,13 +83,13 @@ export const Header: React.FC<HeaderProps> = ({ isDarkMode, toggleTheme }) => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="absolute top-full left-0 right-0 bg-white dark:bg-gray-900 shadow-lg md:hidden transition-all duration-300">
-            <div className="flex flex-col space-y-4 p-4">
+          <div className="absolute top-full left-0 right-0 w-full max-w-full bg-white dark:bg-gray-900 shadow-lg md:hidden transition-all duration-300 overflow-x-hidden">
+            <div className="flex flex-col space-y-2 py-2 px-2">
               {navItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className={`text-left transition-all duration-300 hover:text-purple-600 dark:hover:text-purple-400 ${
+                  className={`text-left text-base transition-all duration-300 hover:text-purple-600 dark:hover:text-purple-400 ${
                     activeSection === item.id
                       ? 'text-purple-600 dark:text-purple-400 font-semibold'
                       : 'text-gray-700 dark:text-gray-300'

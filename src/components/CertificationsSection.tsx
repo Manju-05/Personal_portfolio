@@ -5,7 +5,7 @@ import { Certificate } from '../types';
 const certificationsData: Certificate[] = [
   {
     id: 1,
-    title: "AWS Certified Cloud Practitioner",
+    title: "Certified Cloud Practitioner",
     image: "/assets/images/cert1.jpg",
     verifyUrl: "https://www.credly.com/badges/633d0eb4-3382-405b-b8c9-d284f88a5ca3/linked_in_profile",
     issuer: "AWS"
@@ -19,7 +19,7 @@ const certificationsData: Certificate[] = [
   },
   {
     id: 3,
-    title: "Machine Learning With Python",
+    title: "Machine Learning with Python",
     image: "/assets/images/cert4.jpg",
     verifyUrl: "https://courses.cognitiveclass.ai/certificates/ca0a8f49a61b428492696b07c8a26f5e",
     issuer: "Cognitive Class"
@@ -33,7 +33,7 @@ const certificationsData: Certificate[] = [
   },
   {
     id: 5,
-    title: "Prompt Engineering for Everyone",
+    title: "Prompt Engineering",
     image: "/assets/images/cert5.jpg",
     verifyUrl: "https://courses.cognitiveclass.ai/certificates/cc7663f388b94ef9b1ab03a46ff67fe9",
     issuer: "Cognitive Class"
@@ -68,22 +68,59 @@ const certificationsData: Certificate[] = [
   }
 ];
 
+// Custom hook to get current columns based on window width
+function useCertGridColumns() {
+  const [columns, setColumns] = useState(1);
+
+  useEffect(() => {
+    function updateColumns() {
+      const width = window.innerWidth;
+      if (width >= 1280) setColumns(3); // xl and up
+      else if (width >= 1024) setColumns(3); // lg
+      else if (width >= 768) setColumns(2); // md
+      else setColumns(1); // sm and below
+    }
+    updateColumns();
+    window.addEventListener('resize', updateColumns);
+    return () => window.removeEventListener('resize', updateColumns);
+  }, []);
+
+  return columns;
+}
+
 export const CertificationsSection: React.FC = () => {
-  const [visibleCount, setVisibleCount] = useState(3);
+  const columns = useCertGridColumns();
+  // Always show 3 on mobile, 4 on md, 3 on lg+
+  const getInitialCount = () => {
+    if (window.innerWidth < 640) return 3; // mobile: always 3
+    if (columns === 3) return 3;
+    if (columns === 2) return 4;
+    return 3;
+  };
+  const [visibleCount, setVisibleCount] = useState(getInitialCount());
   const [isLoading, setIsLoading] = useState(false);
   const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
+
+  // Update visibleCount when columns change (e.g., on resize)
+  useEffect(() => {
+    setVisibleCount(getInitialCount());
+  }, [columns]);
 
   useEffect(() => {
     console.log('Current visible count:', visibleCount);
     console.log('Total certifications:', certificationsData.length);
   }, [visibleCount]);
 
+  // Only allow loading full rows (3 at a time for mobile and desktop, 4 for md)
   const loadMore = () => {
-    console.log('Load more clicked. Current count:', visibleCount);
     setIsLoading(true);
-    const newCount = Math.min(visibleCount + 3, certificationsData.length);
-    console.log('Setting new count to:', newCount);
-    setVisibleCount(newCount);
+    let increment = 3;
+    if (columns === 2 && window.innerWidth >= 640) increment = 4;
+    let nextCount = visibleCount + increment;
+    if (nextCount > certificationsData.length) {
+      nextCount = certificationsData.length;
+    }
+    setVisibleCount(nextCount);
     setIsLoading(false);
   };
 
@@ -129,7 +166,7 @@ export const CertificationsSection: React.FC = () => {
           <div className="w-24 h-1 bg-purple-600 dark:bg-purple-400 mx-auto rounded-full"></div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 min-h-[200px] relative">
+        <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 min-h-[200px] relative`}>
           {visibleCertifications.map((cert, index) => (
             <div
               key={cert.id}

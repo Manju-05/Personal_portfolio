@@ -11,6 +11,7 @@ import { TechStackSection } from './components/TechStackSection';
 import { ProjectsSection } from './components/ProjectsSection';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
+import { ScrollToTop } from './components/ScrollToTop';
 
 function App() {
   const { isDarkMode, toggleTheme } = useTheme();
@@ -30,6 +31,7 @@ function App() {
         <ContactSection />
       </main>
       <Footer />
+      <ScrollToTop />
     </div>
   );
 }

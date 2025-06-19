@@ -9,8 +9,10 @@
   box-sizing: border-box;
 }
 
-html {
+html, body {
+  overflow-x: hidden;
   scroll-behavior: smooth;
+  font-size: clamp(14px, 1.5vw, 18px);
 }
 
 body {
@@ -243,4 +245,48 @@ textarea {
   .text-responsive-4xl {
     font-size: 2.25rem;
   }
+}
+
+/* Custom Responsive Breakpoints */
+@media (max-width: 375px) {
+  html { font-size: 14px; }
+}
+@media (max-width: 414px) {
+  html { font-size: 15px; }
+}
+@media (max-width: 600px) {
+  html { font-size: 15px; }
+}
+@media (max-width: 768px) {
+  html { font-size: 16px; }
+}
+@media (max-width: 834px) {
+  html { font-size: 16.5px; }
+}
+@media (max-width: 912px) {
+  html { font-size: 17px; }
+}
+@media (max-width: 1024px) {
+  html { font-size: 17px; }
+}
+@media (max-width: 1112px) {
+  html { font-size: 17.5px; }
+}
+@media (max-width: 1280px) {
+  html { font-size: 18px; }
+}
+@media (max-width: 1366px) {
+  html { font-size: 18px; }
+}
+@media (max-width: 1440px) {
+  html { font-size: 18px; }
+}
+@media (max-width: 1600px) {
+  html { font-size: 18px; }
+}
+@media (max-width: 1920px) {
+  html { font-size: 18px; }
+}
+@media (min-width: 2560px) {
+  html { font-size: 20px; }
 }

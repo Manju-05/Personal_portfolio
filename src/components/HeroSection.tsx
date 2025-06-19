@@ -48,13 +48,13 @@ export const HeroSection: React.FC = () => {
           {/* Left Content */}
           <div className="space-y-6 animate-fade-in-up">
             <div className="space-y-2">
-              <p className="text-3xl lg:text-4xl text-gray-500 dark:text-gray-400 font-light animate-fade-in-up animation-delay-200">
+              <p className="text-3xl lg:text-4xl text-gray-500 dark:text-gray-400 font-light animate-fade-in-up animation-delay-200 mt-10 md:mt-0">
                 Hello,
               </p>
               <h1 className="text-5xl lg:text-6xl font-bold text-gray-800 dark:text-white animate-fade-in-up animation-delay-400">
                 I'm Manjunath
               </h1>
-              <div className="text-2xl lg:text-3xl text-purple-600 dark:text-purple-400 font-medium italic animate-fade-in-up animation-delay-600 h-12 flex items-center">
+              <div className="text-lg md:text-2xl lg:text-3xl text-purple-600 dark:text-purple-400 font-medium italic animate-fade-in-up animation-delay-600 h-12 flex items-center whitespace-nowrap">
                 And I'm a <span className="ml-2">{displayedText}<span className="animate-pulse">|</span></span>
               </div>
             </div>

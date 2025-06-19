@@ -29,7 +29,7 @@ export const AboutSection: React.FC = () => {
               </div>
 
               <div className="lg:col-span-2 space-y-6">
-                <div className="space-y-4 text-gray-600 dark:text-gray-300 leading-relaxed text-justify">
+                <div className="space-y-4 text-gray-600 dark:text-gray-300 leading-relaxed tracking-wide text-left lg:text-justify">
                   <p className="text-lg">
                     Hi, I'm <span className="text-purple-600 dark:text-purple-400 font-semibold">Sai Manjunath</span>, a curious and driven 
                     <span className="text-purple-600 dark:text-purple-400 font-semibold"> Computer Science Engineering student</span> specializing in 
