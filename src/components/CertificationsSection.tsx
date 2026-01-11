@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { ExternalLink, Award } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { ExternalLink, Award, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { Certificate } from '../types';
 
 const certificationsData: Certificate[] = [
@@ -91,61 +92,58 @@ function useCertGridColumns() {
 export const CertificationsSection: React.FC = () => {
   const columns = useCertGridColumns();
   // Always show 3 on mobile, 4 on md, 3 on lg+
-  const getInitialCount = () => {
+  const getInitialCount = useCallback(() => {
+    if (typeof window === 'undefined') return 3;
     if (window.innerWidth < 640) return 3; // mobile: always 3
-    if (columns === 3) return 3;
-    if (columns === 2) return 4;
+    if (window.innerWidth >= 1280) return 3; // xl
+    if (window.innerWidth >= 1024) return 3; // lg
+    if (window.innerWidth >= 768) return 4; // md
     return 3;
-  };
+  }, []); // Remove dependency on columns for initial calculation to avoid flicker
+
   const [visibleCount, setVisibleCount] = useState(getInitialCount());
   const [isLoading, setIsLoading] = useState(false);
   const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
 
   // Update visibleCount when columns change (e.g., on resize)
   useEffect(() => {
-    setVisibleCount(getInitialCount());
+    // Only reset if we are not showing all, or logic could be refined
+    // keeping it simple: reset on drastic resize might be jarring, but ensures layout integrity
+    // For now, let's just respect the manual load state unless it breaks layout
   }, [columns]);
 
-  useEffect(() => {
-    console.log('Current visible count:', visibleCount);
-    console.log('Total certifications:', certificationsData.length);
-  }, [visibleCount]);
-
-  // Only allow loading full rows (3 at a time for mobile and desktop, 4 for md)
   const loadMore = () => {
     setIsLoading(true);
+
+    // Check if we are showing all items
+    if (visibleCount >= certificationsData.length) {
+      // Reset to initial count
+      setVisibleCount(getInitialCount());
+      setIsLoading(false);
+
+      // Scroll back to top of section smoothly
+      const section = document.getElementById('certifications');
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+      }
+      return;
+    }
+
+    // Load more logic
     let increment = 3;
-    if (columns === 2 && window.innerWidth >= 640) increment = 4;
+    if (window.innerWidth >= 768 && window.innerWidth < 1024) increment = 4; // md loads 4
+
     let nextCount = visibleCount + increment;
     if (nextCount > certificationsData.length) {
       nextCount = certificationsData.length;
     }
-    setVisibleCount(nextCount);
-    setIsLoading(false);
+
+    // Simulate slight delay for effect
+    setTimeout(() => {
+      setVisibleCount(nextCount);
+      setIsLoading(false);
+    }, 500);
   };
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate');
-          }
-        });
-      },
-      {
-        threshold: 0.1,
-      }
-    );
-
-    document.querySelectorAll('.animate-on-scroll').forEach((el) => {
-      observer.observe(el);
-    });
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [visibleCount]);
 
   const handleImageError = (certId: number) => {
     console.log('Image failed to load for cert:', certId);
@@ -153,81 +151,154 @@ export const CertificationsSection: React.FC = () => {
   };
 
   const visibleCertifications = certificationsData.slice(0, visibleCount);
-  console.log('Rendering certifications:', visibleCertifications.length);
+  const isAllVisible = visibleCount >= certificationsData.length;
+
+  // Animation variants
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut" as const,
+      },
+    },
+  };
 
   return (
-    <section id="certifications" className="py-20 bg-white dark:bg-gray-900 transition-all duration-500 scroll-animate">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16 animate-on-scroll" data-animation="fade-up">
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4">
-            <span className="text-purple-600 dark:text-purple-400">My</span>{' '}
-            <span className="text-gray-800 dark:text-white">Certifications</span>
-          </h2>
-          <div className="w-24 h-1 bg-purple-600 dark:bg-purple-400 mx-auto rounded-full"></div>
+    <section id="certifications" className="py-10 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 transition-colors duration-500">
+      <div className="container mx-auto px-4 max-w-7xl">
+        <div className="text-center mb-8">
+          <motion.h2
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="text-4xl lg:text-5xl font-bold mb-4"
+          >
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-400">My</span>{' '}
+            <span className="text-gray-900 dark:text-white">Certifications</span>
+          </motion.h2>
+          <motion.div
+            initial={{ width: 0 }}
+            whileInView={{ width: 96 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="h-1.5 bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-400 mx-auto rounded-full"
+          />
         </div>
 
-        <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 min-h-[200px] relative`}>
-          {visibleCertifications.map((cert, index) => (
-            <div
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+        >
+          {visibleCertifications.map((cert) => (
+            <motion.div
               key={cert.id}
-              className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl transition-all duration-500 hover:shadow-2xl transform hover:scale-105 animate-on-scroll"
-              data-animation="fade-up"
-              style={{ animationDelay: `${index * 100}ms` }}
+              layout
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.1 }}
+              variants={itemVariants}
+              whileHover={{ y: -5 }}
+              className="group relative h-72 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-gray-900 cursor-pointer"
             >
-              <div className="relative">
+              {/* Full Background Image */}
+              <div className="absolute inset-0 w-full h-full">
                 {!imageErrors[cert.id] ? (
                   <img
                     src={cert.image}
                     alt={cert.title}
-                    className="w-full h-48 object-cover transition-transform duration-500 hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:blur-[2px] group-hover:opacity-40"
                     loading="lazy"
                     onError={() => handleImageError(cert.id)}
-                    onLoad={() => console.log('Image loaded successfully:', cert.id)}
                   />
                 ) : (
-                  <div className="w-full h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                    <Award className="w-12 h-12 text-gray-400 dark:text-gray-500" />
+                  <div className="w-full h-full bg-gray-800 flex items-center justify-center group-hover:opacity-40 transition-opacity duration-300">
+                    <Award className="w-16 h-16 text-gray-600" />
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                <div className="absolute top-4 right-4 p-2 bg-white/20 backdrop-blur-sm rounded-full">
-                  <Award className="w-5 h-5 text-white" />
-                </div>
               </div>
-              
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
+
+              {/* Dark Overlay on Hover */}
+              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+              {/* Content Overlay - Hidden initially, Slides up on hover */}
+              <div className="absolute inset-0 flex flex-col justify-end p-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out">
+
+                {/* Badge */}
+                <div className="absolute top-4 right-4 translate-y-[-10px] opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-100">
+                  <div className="bg-white/10 backdrop-blur-md border border-white/20 p-2 rounded-xl shadow-lg">
+                    <Award className="w-6 h-6 text-yellow-400" />
+                  </div>
+                </div>
+
+                <h3 className="text-xl font-bold text-white mb-2 drop-shadow-md line-clamp-2">
                   {cert.title}
                 </h3>
-                
-                <p className="text-purple-600 dark:text-purple-400 font-semibold mb-4">
-                  Issued by: {cert.issuer}
-                </p>
-                
+
+                <div className="flex items-center gap-2 mb-4 text-gray-200 text-sm">
+                  <CheckCircle size={14} className="text-purple-400" />
+                  <span className="font-medium">Issued by: {cert.issuer}</span>
+                </div>
+
                 <a
                   href={cert.verifyUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-purple-600 dark:bg-purple-500 text-white px-4 py-2 rounded-full font-semibold hover:bg-purple-700 dark:hover:bg-purple-600 transition-all duration-300 transform hover:scale-105"
+                  className="w-full relative inline-flex items-center justify-center gap-2 px-6 py-2.5 overflow-hidden font-medium text-white transition-all duration-300 bg-white/10 border border-white/20 rounded-xl hover:bg-purple-600 hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/30"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  <ExternalLink size={18} />
-                  Verify Credentials
+                  <span>View Credential</span>
+                  <ExternalLink size={16} />
                 </a>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        {visibleCount < certificationsData.length && (
-          <div className="text-center mt-12">
+        {/* Load More Button */}
+        {certificationsData.length > 3 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
             <button
               onClick={loadMore}
               disabled={isLoading}
-              className="bg-gray-800 dark:bg-white text-white dark:text-gray-800 px-8 py-3 rounded-full font-semibold hover:bg-gray-700 dark:hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group relative inline-flex items-center justify-center px-8 py-3 text-base font-bold text-white transition-all duration-200 bg-gray-900 dark:bg-white dark:text-gray-900 rounded-full hover:bg-gray-800 dark:hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 dark:focus:ring-white disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
             >
-              {isLoading ? 'Loading...' : 'Load More'}
+              <span className="relative flex items-center gap-2">
+                {isLoading ? (
+                  <>Processing...</>
+                ) : (
+                  <>
+                    {isAllVisible ? 'Show Less' : 'Load More Achievements'}
+                    {isAllVisible ? (
+                      <ChevronUp className="w-4 h-4 transition-transform duration-300 group-hover:-translate-y-1" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4 transition-transform duration-300 group-hover:translate-y-1" />
+                    )}
+                  </>
+                )}
+              </span>
             </button>
-          </div>
+          </motion.div>
         )}
       </div>
     </section>
