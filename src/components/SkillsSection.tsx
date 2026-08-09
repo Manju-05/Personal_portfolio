@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // --- Custom 3D Gem SVG Container ---
 const TechGemShape = ({ className, children }: { className?: string; children: React.ReactNode }) => (
@@ -44,59 +44,76 @@ const techStack = [
   {
     name: 'React',
     image: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg',
-    color: '#61DAFB'
+    color: '#61DAFB',
+    category: 'Frontend'
   },
   {
     name: 'Python',
     image: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
-    color: '#3776AB'
+    color: '#3776AB',
+    category: 'AI & Backend'
   },
   {
     name: 'JavaScript',
     image: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg',
-    color: '#F7DF1E'
+    color: '#F7DF1E',
+    category: 'Frontend'
   },
   {
     name: 'HTML',
     image: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg',
-    color: '#E34F26'
+    color: '#E34F26',
+    category: 'Frontend'
   },
   {
     name: 'CSS',
     image: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg',
-    color: '#1572B6'
+    color: '#1572B6',
+    category: 'Frontend'
   },
   {
     name: 'GitHub',
     image: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg',
     isDark: true,
     filter: 'invert(1) brightness(100%)',
-    color: '#ffffff'
+    color: '#ffffff',
+    category: 'Tools & Cloud'
   },
   {
     name: 'SQL',
     image: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg',
-    color: '#4479A1'
+    color: '#4479A1',
+    category: 'AI & Backend'
   },
   {
     name: 'AWS',
     image: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original-wordmark.svg',
     color: '#FF9900',
-    scale: 1.2
+    scale: 1.2,
+    category: 'Tools & Cloud'
   },
   {
     name: 'ROS',
     image: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ros/ros-original.svg',
     color: '#22314E',
     isDark: true,
-    filter: 'invert(1) brightness(100%)'
+    filter: 'invert(1) brightness(100%)',
+    category: 'AI & Backend'
   },
 ];
 
+const categories = ['All', 'Frontend', 'AI & Backend', 'Tools & Cloud'];
+
 // --- Main Component ---
 export const SkillsSection: React.FC = () => {
+  const [activeCategory, setActiveCategory] = useState('All');
+
+  const filteredTech = techStack.filter(
+    tech => activeCategory === 'All' || tech.category === activeCategory
+  );
+
   return (
-    <section id="skills" className="py-10 bg-[#050505] overflow-hidden relative perspective-1000">
+    <section id="skills" className="py-16 bg-[#050505] overflow-hidden relative perspective-1000">
       {/* Background Ambience */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
         <div className="absolute top-[-20%] left-[20%] w-[800px] h-[800px] bg-purple-900/10 rounded-full blur-[120px]" />
@@ -109,82 +126,103 @@ export const SkillsSection: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mb-8"
+          className="text-center mb-12"
         >
-
-          <h3 className="text-3xl lg:text-4xl font-extrabold text-white">
-            Tech Stack
+          <h3 className="text-3xl lg:text-5xl font-extrabold text-white">
+            Tech <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">Arsenal</span>
           </h3>
-          <div className="w-20 h-1 mt-6 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full mx-auto" />
+          <p className="text-gray-400 mt-4 max-w-2xl mx-auto text-lg">
+            The core technologies and tools I leverage to build scalable and intelligent solutions.
+          </p>
         </motion.div>
 
-        {/* 3D Floating Grid */}
-        <div className="flex flex-wrap justify-center gap-6 lg:gap-10 max-w-5xl mx-auto items-center" style={{ perspective: '1000px' }}>
-          {techStack.map((tech, index) => (
-            <motion.div
-              key={tech.name}
-              initial={{ opacity: 0, scale: 0, rotateY: 90 }}
-              whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
-              transition={{
-                duration: 0.8,
-                delay: index * 0.1,
-                type: "spring",
-                bounce: 0.4
-              }}
-              viewport={{ once: true }}
-              className="relative group cursor-pointer"
-              style={{ transformStyle: 'preserve-3d' }}
+        {/* Filter Tabs */}
+        <div className="flex flex-wrap justify-center gap-3 mb-16">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setActiveCategory(category)}
+              className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                activeCategory === category
+                  ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30 border border-purple-500'
+                  : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10 hover:text-white'
+              }`}
             >
-              {/* Continuous 3D Rotation Container */}
-              <motion.div
-                animate={{
-                  rotateY: [0, 10, 0, -10, 0],
-                  y: [0, -15, 0]
-                }}
-                transition={{
-                  rotateY: {
-                    duration: 5,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  },
-                  y: {
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: Math.random() * 2
-                  }
-                }}
-                className="w-28 h-28 lg:w-32 lg:h-32 relative preserve-3d"
-              >
-                {/* The Gem Container */}
-                <TechGemShape className="w-full h-full transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-                  <img
-                    src={tech.image}
-                    alt={tech.name}
-                    className="w-full h-full object-contain drop-shadow-md transform transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12"
-                    style={{
-                      filter: tech.filter || 'none',
-                      transform: tech.scale ? `scale(${tech.scale})` : undefined
-                    }}
-                  />
-                </TechGemShape>
-              </motion.div>
-
-              {/* Hover Glow Reflection (Floor) */}
-              <div
-                className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-20 h-4 rounded-[100%] blur-md opacity-20 group-hover:opacity-60 transition-opacity duration-300"
-                style={{ backgroundColor: tech.color }}
-              />
-
-              {/* Name Tag */}
-              <div className="absolute -bottom-14 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-20">
-                <span className="text-white text-sm font-bold tracking-wide whitespace-nowrap bg-gray-900/90 px-3 py-1.5 rounded-full border border-gray-700 backdrop-blur-md shadow-xl">
-                  {tech.name}
-                </span>
-              </div>
-            </motion.div>
+              {category}
+            </button>
           ))}
         </div>
+
+        {/* 3D Floating Grid */}
+        <motion.div layout className="flex flex-wrap justify-center gap-6 lg:gap-10 max-w-5xl mx-auto items-center min-h-[400px]" style={{ perspective: '1000px' }}>
+          <AnimatePresence mode="popLayout">
+            {filteredTech.map((tech, index) => (
+              <motion.div
+                layout
+                key={tech.name}
+                initial={{ opacity: 0, scale: 0.5, rotateY: 90 }}
+                animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+                exit={{ opacity: 0, scale: 0.5, rotateY: -90 }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.05,
+                  type: "spring",
+                  bounce: 0.4
+                }}
+                className="relative group cursor-pointer"
+                style={{ transformStyle: 'preserve-3d' }}
+              >
+                {/* Continuous 3D Rotation Container */}
+                <motion.div
+                  animate={{
+                    rotateY: [0, 10, 0, -10, 0],
+                    y: [0, -15, 0]
+                  }}
+                  transition={{
+                    rotateY: {
+                      duration: 5,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    },
+                    y: {
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: Math.random() * 2
+                    }
+                  }}
+                  className="w-28 h-28 lg:w-32 lg:h-32 relative preserve-3d"
+                >
+                  {/* The Gem Container */}
+                  <TechGemShape className="w-full h-full transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                    <img
+                      src={tech.image}
+                      alt={tech.name}
+                      className="w-full h-full object-contain drop-shadow-md transform transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12"
+                      style={{
+                        filter: tech.filter || 'none',
+                        transform: tech.scale ? `scale(${tech.scale})` : undefined
+                      }}
+                    />
+                  </TechGemShape>
+                </motion.div>
+
+                {/* Hover Glow Reflection (Floor) */}
+                <div
+                  className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-20 h-4 rounded-[100%] blur-md opacity-20 group-hover:opacity-60 transition-opacity duration-300"
+                  style={{ backgroundColor: tech.color }}
+                />
+
+                {/* Name Tag */}
+                <div className="absolute -bottom-14 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-20">
+                  <span className="text-white text-sm font-bold tracking-wide whitespace-nowrap bg-gray-900/90 px-3 py-1.5 rounded-full border border-gray-700 backdrop-blur-md shadow-xl">
+                    {tech.name}
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
       </div>
     </section>
   );

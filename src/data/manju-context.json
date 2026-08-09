@@ -1,0 +1,72 @@
+{
+  "personal_info": {
+    "name": "Sai Manjunath Pathapadu",
+    "email": "saimanjunath069@gmail.com",
+    "whatsapp": "+91 6302348787",
+    "location": "Andhra Pradesh, India",
+    "role": "B.Tech CSE student specializing in AI & ML",
+    "objective": "Aspiring AI & ML engineer pursuing B.Tech in CSE, passionate about merging technology with design to create intelligent, visually immersive, and meaningful web experiences.",
+    "links": {
+      "github": "https://github.com/Manju-05",
+      "linkedin": "https://www.linkedin.com/in/sai-manjunath-764845344/"
+    }
+  },
+  "education": {
+    "degree": "B.Tech in Computer Science Engineering (AI & ML)",
+    "institution": "RGM Group of Institutions",
+    "background": "Diploma in Computer Science"
+  },
+  "skills": [
+    "Python",
+    "React",
+    "TypeScript",
+    "Tailwind CSS",
+    "Artificial Intelligence",
+    "Machine Learning",
+    "Robotics Operating System (ROS)",
+    "Java",
+    "Full-Stack Development"
+  ],
+  "experience": [
+    {
+      "role": "Java Development Intern",
+      "company": "MNP Software Solutions Pvt. Ltd.",
+      "duration": "6 months",
+      "description": "Gained practical experience by contributing to real-time Java applications and solidifying programming logic."
+    }
+  ],
+  "projects": [
+    {
+      "name": "JobPilot AI",
+      "description": "An AI-powered job application tracking system with automated email processing."
+    },
+    {
+      "name": "AI News Intelligence Platform",
+      "description": "A platform that aggregates and analyzes news using AI to extract key insights."
+    },
+    {
+      "name": "AgriAssist AI",
+      "description": "An AI solution designed to assist farmers with crop management and predictions."
+    },
+    {
+      "name": "Automated Certificate Management System",
+      "description": "A system that automates the generation and distribution of certificates."
+    },
+    {
+      "name": "Student Daily Automation Hub",
+      "description": "A productivity tool that automates daily routine tasks for students."
+    }
+  ],
+  "bot_responses": {
+    "greetings": [
+      "Hi there! 👋 I'm Manju's digital assistant. How can I help you today?",
+      "Hello! 🤖 I'm an AI built by Sai Manjunath. What would you like to know about his background or projects?"
+    ],
+    "skills": "Manju specializes in AI & Machine Learning and Full-Stack Development. His core tech stack includes:\n\n• Languages: Python, Java, TypeScript\n• Web: React, Tailwind CSS\n• AI/ML: Data Science, Neural Networks\n• Other: Robotics Operating System (ROS)",
+    "projects": "Manju has built several enterprise-grade projects:\n\n1. JobPilot AI (Automated tracking system)\n2. AI News Intelligence Platform\n3. AgriAssist AI (Crop management)\n4. Automated Certificate System\n\nWhich one would you like to know more about?",
+    "contact": "You can easily reach Manju through:\n\n• Email: saimanjunath069@gmail.com\n• WhatsApp: +91 6302348787\n\nOr just use the contact form at the bottom of the page!",
+    "education": "Manju's educational background:\n\n• B.Tech in CSE (Spec. in AI & ML) at RGM Group of Institutions.\n• Diploma in Computer Science.",
+    "experience": "Manju's professional experience:\n\n• Java Development Intern at MNP Software Solutions (6 months).\n• Focused on real-time enterprise applications and solidifying programming logic.",
+    "fallback": "That's an interesting question! I am currently running on my basic Tier-1 rules engine.\n\nFor more complex inquiries, please email Manju directly at saimanjunath069@gmail.com!"
+  }
+}

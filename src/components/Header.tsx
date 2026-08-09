@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const navItems = [
     { id: 'home', label: 'Home' },
@@ -17,6 +18,8 @@ export const Header: React.FC = () => {
 
   useEffect(() => {
     const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+
       const sections = navItems.map(item => document.getElementById(item.id)).filter(Boolean);
       const scrollPosition = window.scrollY + 100;
 
@@ -46,14 +49,26 @@ export const Header: React.FC = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
-      className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm transition-all duration-500"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled 
+          ? 'bg-white/70 dark:bg-[#050505]/80 backdrop-blur-lg shadow-[0_4px_30px_rgba(0,0,0,0.1)] py-2' 
+          : 'bg-transparent py-5'
+      }`}
     >
-      <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
+      <nav className="container mx-auto px-4 flex items-center justify-between">
         <motion.div
-          className="text-2xl font-bold text-gray-800 dark:text-white transition-colors duration-500"
-          whileHover={{ scale: 1.05 }}
+          className="flex flex-col md:flex-row md:items-baseline gap-1 md:gap-3"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
         >
-          Sai Manjunath Pathapadu
+          <div className="text-xl md:text-2xl font-bold text-gray-800 dark:text-white transition-colors duration-500">
+            Manjunath
+          </div>
+          <div className="hidden lg:flex items-center gap-2 border-l border-gray-300 dark:border-gray-700 pl-3">
+            <span className="text-sm font-medium text-gray-600 dark:text-gray-300 italic">"Engineering Intelligence"</span>
+            <span className="text-[10px] md:text-xs text-purple-600 dark:text-purple-400 font-bold uppercase tracking-widest">— AI & ML</span>
+          </div>
         </motion.div>
 
         {/* Desktop Navigation */}
